@@ -1,8 +1,8 @@
 [
   {
-    "name": "micro-service-template-crud-aggregate",
-    "src": "frontend/emi/micro-service-template-crud-aggregate",
-    "assets": "frontend/emi/micro-service-template-crud-aggregate/assets/micro-service-template-crud-aggregate",
+    "name": "reporter-vehicle-stats-management",
+    "src": "frontend/reporter-ui/reporter-vehicle-stats-management",
+    "assets": "frontend/reporter-ui/reporter-vehicle-stats-management/assets/reporter-vehicle-stats-management",
     "prebuildCommands": [],
     "environmentVars": {
       "_env": {
