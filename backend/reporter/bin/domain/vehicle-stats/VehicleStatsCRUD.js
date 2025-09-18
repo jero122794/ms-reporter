@@ -43,7 +43,7 @@ class VehicleStatsCRUD {
 
 
   /**  
-   * Gets the VehicleStats list
+   * 
    *
    * @param {*} args args
    */
@@ -62,7 +62,7 @@ class VehicleStatsCRUD {
   }
 
   /**  
-   * Gets the get VehicleStats by id
+   *
    *
    * @param {*} args args
    */
@@ -76,9 +76,6 @@ class VehicleStatsCRUD {
   }
 
 
-  /**
-  * Create a VehicleStats
-  */
   createVehicleStats$({ root, args, jwt }, authToken) {
     const aggregateId = uuidv4();
     const input = {
@@ -97,9 +94,6 @@ class VehicleStatsCRUD {
     )
   }
 
-  /**
-   * updates an VehicleStats 
-   */
   updateVehicleStats$({ root, args, jwt }, authToken) {
     const { id, input, merge } = args;
 
@@ -114,10 +108,6 @@ class VehicleStatsCRUD {
     )
   }
 
-
-  /**
-   * deletes an VehicleStats
-   */
   deleteVehicleStatss$({ root, args, jwt }, authToken) {
     const { ids } = args;
     return forkJoin(
@@ -138,7 +128,7 @@ class VehicleStatsCRUD {
   }
 
   /**
-   * Gets fleet statistics
+   * 
    *
    * @param {*} args args
    */
