@@ -28,15 +28,6 @@ let instance;
 class VehicleStatsCRUD {
   constructor() {
   }
-
-  /**     
-   * Generates and returns an object that defines the CQRS request handlers.
-   * 
-   * The map is a relationship of: AGGREGATE_TYPE VS { MESSAGE_TYPE VS  { fn: rxjsFunction, instance: invoker_instance } }
-   * 
-   * ## Example
-   *  { "CreateUser" : { "somegateway.someprotocol.mutation.CreateUser" : {fn: createUser$, instance: classInstance } } }
-   */
   generateRequestProcessorMap() {
     return {
       'VehicleStats': {
