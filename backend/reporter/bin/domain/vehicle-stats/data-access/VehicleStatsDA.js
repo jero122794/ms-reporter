@@ -23,9 +23,7 @@ class VehicleStatsDA {
     });
   }
 
-  /**
-   * 
-   */
+
   static getVehicleStats$(id, organizationId) {
     const collection = mongoDB.db.collection(CollectionName);
 
