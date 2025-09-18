@@ -16,14 +16,6 @@ class VehicleStatsES {
     constructor() {
     }
 
-    /**     
-     * Generates and returns an object that defines the Event-Sourcing events handlers.
-     * 
-     * The map is a relationship of: AGGREGATE_TYPE VS { EVENT_TYPE VS  { fn: rxjsFunction, instance: invoker_instance } }
-     * 
-     * ## Example
-     *  { "User" : { "UserAdded" : {fn: handleUserAdded$, instance: classInstance } } }
-     */
     generateEventProcessorMap() {
         return {
             'VehicleStats': {
@@ -33,8 +25,8 @@ class VehicleStatsES {
     };
 
     /**
-     * Using the VehicleStatsModified events restores the MaterializedView
-     * This is just a recovery strategy
+     * 
+     * 
      * @param {*} VehicleStatsModifiedEvent VehicleStats Modified Event
      */
     handleVehicleStatsModified$({ etv, aid, av, data, user, timestamp }) {
