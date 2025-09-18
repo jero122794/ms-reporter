@@ -52,7 +52,7 @@ class VehicleEventsProcessor {
                 })
             )
             .subscribe(
-                event => this.events$.next(event.data),
+                event => this.events$.next(event),
                 error => ConsoleLogger.e('VehicleEventsProcessor: Error in MQTT message processing', error),
                 () => ConsoleLogger.i('VehicleEventsProcessor: MQTT message processing completed')
             );
