@@ -16,7 +16,7 @@ import {
 import { GetFleetStatistics, FleetStatisticsUpdated } from '../gql/FleetStatistics';
 import reducer from '../store/reducers';
 
-// Simple chart components (using basic HTML/CSS since we don't have chart libraries)
+
 const SimpleBarChart = ({ data, title, color = '#1976d2' }) => {
     const maxValue = Math.max(...Object.values(data));
     
