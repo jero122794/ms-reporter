@@ -9,7 +9,7 @@ const crypto = require('crypto');
 const VehicleStatsDA = require('./data-access/VehicleStatsDA');
 
 /**
- * Singleton instance
+ * 
  * @type { VehicleEventsProcessor }
  */
 let instance;
@@ -22,7 +22,7 @@ class VehicleEventsProcessor {
     }
 
     /**
-     * Generates a deterministic aid from vehicle data when missing
+     *
      * @param {Object} vehicleData
      * @returns {string}
      */
@@ -40,9 +40,7 @@ class VehicleEventsProcessor {
         return crypto.createHash('sha256').update(payload).digest('hex');
     }
 
-    /**
-     * Inicia el procesamiento de eventos de vehículos
-     */
+
     start$() {
         ConsoleLogger.i('VehicleEventsProcessor: Starting vehicle events processing...');
         
