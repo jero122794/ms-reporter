@@ -4,6 +4,7 @@ const { Subject, from } = require('rxjs');
 const { bufferTime, filter, mergeMap, tap, catchError } = require('rxjs/operators');
 const { ConsoleLogger } = require('@nebulae/backend-node-tools').log;
 const { brokerFactory } = require('@nebulae/backend-node-tools').broker;
+const crypto = require('crypto');
 
 const VehicleStatsDA = require('./data-access/VehicleStatsDA');
 
@@ -18,6 +19,25 @@ class VehicleEventsProcessor {
         this.events$ = new Subject();
         this.broker = brokerFactory();
         this.isProcessing = false;
+    }
+
+    /**
+     * Generates a deterministic aid from vehicle data when missing
+     * @param {Object} vehicleData
+     * @returns {string}
+     */
+    generateAidFromVehicleData(vehicleData) {
+        const stableStringify = (obj) => {
+            if (obj === null || typeof obj !== 'object') { return JSON.stringify(obj); }
+            if (Array.isArray(obj)) {
+                return '[' + obj.map(item => stableStringify(item)).join(',') + ']';
+            }
+            const keys = Object.keys(obj).sort();
+            const keyValues = keys.map(k => `${JSON.stringify(k)}:${stableStringify(obj[k])}`);
+            return '{' + keyValues.join(',') + '}';
+        };
+        const payload = stableStringify(vehicleData || {});
+        return crypto.createHash('sha256').update(payload).digest('hex');
     }
 
     /**
@@ -52,7 +72,14 @@ class VehicleEventsProcessor {
                 })
             )
             .subscribe(
-                event => this.events$.next(event),
+                event => {
+                    const envelope = event && event.data ? event.data : event;
+                    if (!envelope) { return; }
+                    if (!envelope.aid && envelope.data) {
+                        envelope.aid = this.generateAidFromVehicleData(envelope.data);
+                    }
+                    this.events$.next(envelope);
+                },
                 error => ConsoleLogger.e('VehicleEventsProcessor: Error in MQTT message processing', error),
                 () => ConsoleLogger.i('VehicleEventsProcessor: MQTT message processing completed')
             );

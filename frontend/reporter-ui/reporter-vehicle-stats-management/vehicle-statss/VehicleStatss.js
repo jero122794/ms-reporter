@@ -177,8 +177,19 @@ function VehicleStatss()
     });
 
     // Real-time subscription
-    const { data: subscriptionData, loading: subscriptionLoading } = useSubscription(
-        FleetStatisticsUpdated().query
+    const { data: subscriptionData, loading: subscriptionLoading, error: subscriptionError } = useSubscription(
+        FleetStatisticsUpdated().query,
+        {
+            onSubscriptionData: ({ subscriptionData }) => {
+                console.log('Subscription data received:', subscriptionData);
+            },
+            onSubscriptionComplete: () => {
+                console.log('Subscription completed');
+            },
+            onError: (error) => {
+                console.error('Subscription error:', error);
+            }
+        }
     );
 
     // Update state when initial data loads
@@ -192,6 +203,7 @@ function VehicleStatss()
     // Update state when subscription data arrives
     useEffect(() => {
         if (subscriptionData && subscriptionData.FleetStatisticsUpdated) {
+            console.log('FleetStatisticsUpdated received:', subscriptionData.FleetStatisticsUpdated);
             setFleetStats(subscriptionData.FleetStatisticsUpdated);
             setLastUpdate(subscriptionData.FleetStatisticsUpdated.lastUpdated);
         }
@@ -252,8 +264,8 @@ function VehicleStatss()
                     <Typography variant="h4" align="center" className="w-full sm:w-auto">Dashboard de Estadísticas de Fleet</Typography>
                     <Box display="flex" alignItems="center" className="mt-16 sm:mt-0">
                         <Chip 
-                            label={subscriptionLoading ? "Connecting..." : "Live"} 
-                            color={subscriptionLoading ? "default" : "primary"}
+                            label={subscriptionLoading ? "Connecting..." : subscriptionError ? "Error" : "Live"} 
+                            color={subscriptionLoading ? "default" : subscriptionError ? "secondary" : "primary"}
                             size="small"
                             style={{ marginRight: 8 }}
                         />
@@ -322,6 +334,14 @@ function VehicleStatss()
                     <Card>
                         <CardContent>
                             <Typography variant="h6" gutterBottom>Raw Data (Debug)</Typography>
+                            <Typography variant="body2" color="textSecondary" gutterBottom>
+                                Subscription Status: {subscriptionLoading ? "Loading..." : subscriptionError ? "Error" : "Connected"}
+                            </Typography>
+                            {subscriptionError && (
+                                <Typography variant="body2" color="error" gutterBottom>
+                                    Error: {subscriptionError.message}
+                                </Typography>
+                            )}
                             <pre style={{ fontSize: '12px', overflow: 'auto' }}>
                                 {JSON.stringify(fleetStats, null, 2)}
                             </pre>

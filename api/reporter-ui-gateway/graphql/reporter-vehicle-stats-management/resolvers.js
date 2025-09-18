@@ -3,10 +3,11 @@ const PubSub = require("graphql-subscriptions").PubSub;
 const pubsub = new PubSub();
 const { of } = require("rxjs");
 const { tap, map, mergeMap, catchError } = require('rxjs/operators');
-let broker = require("../../broker/BrokerFactory")();
+const { brokerFactory } = require('@nebulae/backend-node-tools').broker;
+let broker = brokerFactory();
 broker = broker.secondaryBroker ? broker.secondaryBroker : broker;
-const RoleValidator = require('../../tools/RoleValidator');
-const { handleError$ } = require('../../tools/GraphqlResponseTools');
+const { RoleValidator } = require('@nebulae/backend-node-tools').auth;
+const { handleError$ } = require('@nebulae/backend-node-tools').graphql;
 
 const INTERNAL_SERVER_ERROR_CODE = 1;
 const PERMISSION_DENIED_ERROR_CODE = 2;
