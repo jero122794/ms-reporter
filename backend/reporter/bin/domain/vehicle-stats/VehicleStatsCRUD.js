@@ -45,6 +45,7 @@ class VehicleStatsCRUD {
         "reporter-uigateway.graphql.mutation.ReporterCreateVehicleStats": { fn: instance.createVehicleStats$, instance, jwtValidation: { roles: WRITE_ROLES, attributes: REQUIRED_ATTRIBUTES } },
         "reporter-uigateway.graphql.mutation.ReporterUpdateVehicleStats": { fn: instance.updateVehicleStats$, jwtValidation: { roles: WRITE_ROLES, attributes: REQUIRED_ATTRIBUTES } },
         "reporter-uigateway.graphql.mutation.ReporterDeleteVehicleStatss": { fn: instance.deleteVehicleStatss$, jwtValidation: { roles: WRITE_ROLES, attributes: REQUIRED_ATTRIBUTES } },
+        "reporter-uigateway.graphql.query.GetFleetStatistics": { fn: instance.getFleetStatistics$, instance, jwtValidation: { roles: READ_ROLES, attributes: REQUIRED_ATTRIBUTES } },
       }
     }
   };
@@ -145,6 +146,17 @@ class VehicleStatsCRUD {
     );
   }
 
+  /**
+   * Gets fleet statistics
+   *
+   * @param {*} args args
+   */
+  getFleetStatistics$({ args }, authToken) {
+    return VehicleStatsDA.getFleetStatistics$().pipe(
+      mergeMap(rawResponse => CqrsResponseHelper.buildSuccessResponse$(rawResponse)),
+      catchError(err => iif(() => err.name === 'MongoTimeoutError', throwError(err), CqrsResponseHelper.handleError$(err)))
+    );
+  }
 
   /**
    * Generate an Modified event 
@@ -167,6 +179,12 @@ class VehicleStatsCRUD {
       },
       user: authToken.preferred_username
     })
+  }
+  getFleetStatistics$({ args }, authToken) {
+    return VehicleStatsDA.getFleetStatistics$().pipe(
+      mergeMap(rawResponse => CqrsResponseHelper.buildSuccessResponse$(rawResponse)),
+      catchError(err => iif(() => err.name === 'MongoTimeoutError', throwError(err), CqrsResponseHelper.handleError$(err)))
+    );
   }
 }
 

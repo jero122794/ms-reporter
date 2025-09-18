@@ -32,7 +32,7 @@ export const MicroFrontendConfig = {
             children: [{
                 'id': 'reporter-vehicle-stats-management',
                 'type': 'item',
-                'icon': 'business',
+                'icon': 'dashboard',
                 'url': '/vehicle-stats-mng',
                 'priority': 2000,
                 auth

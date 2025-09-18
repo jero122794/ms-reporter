@@ -78,7 +78,7 @@ module.exports = {
             return sendToBackEndHandler$(root, args, context, READ_ROLES, 'query', 'VehicleStats', 'ReporterVehicleStats').toPromise();
         },
         GetFleetStatistics(root, args, context) {
-            return sendToBackEndHandler$(root, args, context, READ_ROLES, 'query', 'VehicleStats', 'GetFleetStatistics').toPromise();
+            return sendToBackEndHandler$(root, args, context, READ_ROLES, 'query', 'VehicleStats', 'GetFleetStatistics', 5000).toPromise();
         }
     },
 
@@ -121,7 +121,6 @@ module.exports = {
         FleetStatisticsUpdated: {
             subscribe: withFilter(
                 (payload, variables, context, info) => {
-                    //Checks the roles of the user, if the user does not have at least one of the required roles, an error will be thrown
                     RoleValidator.checkAndThrowError(
                         context.authToken.realm_access.roles,
                         READ_ROLES,
@@ -133,7 +132,7 @@ module.exports = {
                     return pubsub.asyncIterator("FleetStatisticsUpdated");
                 },
                 (payload, variables, context, info) => {
-                    return payload ? true : false;
+                    return !!payload;
                 }
             )
         }
@@ -156,11 +155,9 @@ const eventDescriptors = [
     {
         backendEventName: "FleetStatisticsUpdated",
         gqlSubscriptionName: "FleetStatisticsUpdated",
-        dataExtractor: evt => evt.data, // OPTIONAL, only use if needed
-        onError: (error, descriptor) =>
-            console.log(`Error processing ${descriptor.backendEventName}`), // OPTIONAL, only use if needed
-        onEvent: (evt, descriptor) =>
-            console.log(`Event of type  ${descriptor.backendEventName} arrived`) // OPTIONAL, only use if needed
+        dataExtractor: evt => evt.data,
+        onError: (error, descriptor) => console.log(`Error processing ${descriptor.backendEventName}`),
+        onEvent: (evt, descriptor) => console.log(`Event of type  ${descriptor.backendEventName} arrived`)
     }
 ];
 

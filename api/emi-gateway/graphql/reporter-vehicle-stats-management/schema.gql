@@ -1,3 +1,18 @@
+extend type Query {
+  OrganizationMngOrganizationListing: OrganizationMngOrganizationListingResult!
+}
+type OrganizationMngOrganizationListingResult {
+  data: [Organization!]!
+  total: Int!
+}
+
+type Organization {
+  _id: ID!
+  name: String!
+  logoUrl: String
+}
+
+
 type CommandResponse {
   "Response code"
   code: Int
@@ -69,20 +84,14 @@ input ReporterVehicleStatsInput {
   active: Boolean
 }
 
+
 type FleetStatistics {
-  "Fleet statistics document ID"
   _id: ID!
-  "Total number of vehicles processed"
   totalVehicles: Int!
-  "Vehicles grouped by type"
   vehiclesByType: FleetTypeStats
-  "Vehicles grouped by decade"
   vehiclesByDecade: FleetDecadeStats
-  "Vehicles grouped by speed class"
   vehiclesBySpeedClass: FleetSpeedClassStats
-  "Horsepower statistics"
   hpStats: FleetHpStats
-  "Last update timestamp"
   lastUpdated: String!
 }
 
@@ -107,17 +116,13 @@ type FleetSpeedClassStats {
 }
 
 type FleetHpStats {
-  "Minimum horsepower"
   min: Float!
-  "Maximum horsepower"
   max: Float!
-  "Sum of all horsepower values"
   sum: Float!
-  "Count of vehicles with horsepower data"
   count: Int!
-  "Average horsepower (calculated)"
   avg: Float!
 }
+
 
 type Query {
   "Get VehicleStatss filtered "
