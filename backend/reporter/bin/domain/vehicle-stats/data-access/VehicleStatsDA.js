@@ -24,7 +24,7 @@ class VehicleStatsDA {
   }
 
   /**
-   * Gets an user by its username
+   * 
    */
   static getVehicleStats$(id, organizationId) {
     const collection = mongoDB.db.collection(CollectionName);
@@ -88,7 +88,7 @@ class VehicleStatsDA {
   }
 
   /**
-  * creates a new VehicleStats 
+  *
   * @param {*} id VehicleStats ID
   * @param {*} VehicleStats properties
   */
@@ -106,7 +106,7 @@ class VehicleStatsDA {
   }
 
   /**
-  * modifies the VehicleStats properties
+  *
   * @param {String} id  VehicleStats ID
   * @param {*} VehicleStats properties to update
   */
@@ -131,7 +131,7 @@ class VehicleStatsDA {
   }
 
   /**
-  * modifies the VehicleStats properties
+  * 
   * @param {String} id  VehicleStats ID
   * @param {*} VehicleStats properties to update
   */
@@ -154,7 +154,7 @@ class VehicleStatsDA {
   }
 
   /**
-  * modifies the VehicleStats properties
+  * 
   * @param {String} id  VehicleStats ID
   * @param {*} VehicleStats properties to update
   */
@@ -171,7 +171,7 @@ class VehicleStatsDA {
   }
 
   /**
-    * deletes an VehicleStats 
+    * 
     * @param {*} _id  VehicleStats ID
   */
   static deleteVehicleStats$(_id) {
@@ -182,7 +182,7 @@ class VehicleStatsDA {
   }
 
   /**
-    * deletes multiple VehicleStats at once
+    * 
     * @param {*} _ids  VehicleStats IDs array
   */
   static deleteVehicleStatss$(_ids) {
@@ -196,7 +196,7 @@ class VehicleStatsDA {
 // ===== FLEET STATISTICS METHODS =====
 
   /**
-   * Gets processed aids from processed_vehicles collection
+   * 
    * @param {Array} aids - Array of aids to check
    * @returns {Observable} Observable with array of processed aids
    */
@@ -212,7 +212,7 @@ class VehicleStatsDA {
   }
 
   /**
-   * Inserts processed aids in bulk
+   * 
    * @param {Array} aids - Array of aids to insert
    * @returns {Observable} Observable with result
    */
@@ -227,7 +227,7 @@ class VehicleStatsDA {
   }
 
   /**
-   * Updates fleet statistics with batch data
+   * 
    * @param {Object} batchStats - Statistics from the batch
    * @returns {Observable} Observable with updated statistics
    */
@@ -242,26 +242,26 @@ class VehicleStatsDA {
       }
     };
 
-    // Add type increments
+   
     Object.keys(batchStats.vehiclesByType).forEach(type => {
       update.$inc[`vehiclesByType.${type}`] = batchStats.vehiclesByType[type];
     });
 
-    // Add decade increments
+  
     Object.keys(batchStats.vehiclesByDecade).forEach(decade => {
       update.$inc[`vehiclesByDecade.${decade}`] = batchStats.vehiclesByDecade[decade];
     });
 
-    // Add speed class increments
+  
     Object.keys(batchStats.vehiclesBySpeedClass).forEach(speedClass => {
       update.$inc[`vehiclesBySpeedClass.${speedClass}`] = batchStats.vehiclesBySpeedClass[speedClass];
     });
 
-    // Add HP stats increments
+  
     update.$inc['hpStats.sum'] = batchStats.hpStats.sum;
     update.$inc['hpStats.count'] = batchStats.hpStats.count;
 
-    // Add min/max operations
+  
     if (batchStats.hpStats.min !== Infinity) {
       update.$min = { 'hpStats.min': batchStats.hpStats.min };
     }
@@ -280,12 +280,12 @@ class VehicleStatsDA {
       .pipe(
         map(result => {
           const stats = result.value;
-          // Calculate average
+          
           if (stats.hpStats && stats.hpStats.count > 0) {
             stats.hpStats.avg = stats.hpStats.sum / stats.hpStats.count;
           }
           
-          // Map decade keys to GraphQL-compatible names
+        
           if (stats.vehiclesByDecade) {
             const mappedDecades = {};
             Object.keys(stats.vehiclesByDecade).forEach(decade => {
@@ -301,7 +301,7 @@ class VehicleStatsDA {
   }
 
   /**
-   * Gets current fleet statistics
+   *
    * @returns {Observable} Observable with fleet statistics
    */
   static getFleetStatistics$() {
@@ -322,12 +322,12 @@ class VehicleStatsDA {
             };
           }
           
-          // Calculate average if not present
+        
           if (stats.hpStats && stats.hpStats.count > 0 && !stats.hpStats.avg) {
             stats.hpStats.avg = stats.hpStats.sum / stats.hpStats.count;
           }
           
-          // Map decade keys to GraphQL-compatible names
+         
           if (stats.vehiclesByDecade) {
             const mappedDecades = {};
             Object.keys(stats.vehiclesByDecade).forEach(decade => {
@@ -343,7 +343,7 @@ class VehicleStatsDA {
   }
 
   /**
-   * Creates indexes for fleet statistics collections
+   * 
    * @returns {Observable} Observable with result
    */
   static createFleetStatisticsIndexes$() {
@@ -351,9 +351,7 @@ class VehicleStatsDA {
     const fleetStatisticsCollection = mongoDB.db.collection('fleet_statistics');
     
     const indexes = [
-      // Unique index for processed_vehicles aid
       processedVehiclesCollection.createIndex({ aid: 1 }, { unique: true }),
-      // Index for fleet_statistics document
       fleetStatisticsCollection.createIndex({ _id: 1 })
     ];
 
